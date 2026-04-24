@@ -2,14 +2,19 @@ function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function normalizeWhatsAppId(id) {
+    if (!id || typeof id !== 'string') return '';
+    return id.trim().toLowerCase().replace(/:\d+(?=@)/, '');
+}
+
 class MessageHandler {
     constructor(options) {
         this.client = options.client;
         this.logger = options.logger;
-        this.sourceGroupId = options.sourceGroupId;
+        this.sourceGroupId = normalizeWhatsAppId(options.sourceGroupId);
         this.targetChat = options.targetChat;
         this.forwardKeywords = options.forwardKeywords || [];
-        this.allowedSenders = new Set(options.allowedSenders || []);
+        this.allowedSenders = new Set((options.allowedSenders || []).map((id) => normalizeWhatsAppId(id)));
         this.maxRetryAttempts = options.maxRetryAttempts || 3;
         this.retryDelayMs = options.retryDelayMs || 1500;
         this.rateLimitMs = options.rateLimitMs || 400;
@@ -37,7 +42,7 @@ class MessageHandler {
 
     isAllowedSender(authorId) {
         if (this.allowedSenders.size === 0) return true;
-        return this.allowedSenders.has(authorId);
+        return this.allowedSenders.has(normalizeWhatsAppId(authorId));
     }
 
     passesKeywordFilter(body) {
@@ -82,11 +87,12 @@ class MessageHandler {
 
     async forwardMessage(message) {
         try {
-            if (!message || !message.id?.id) return;
+            const messageId = message?.id?.id || message?.id?._serialized || '';
+            if (!messageId) return;
             if (message.fromMe) return;
-            if (message.from !== this.sourceGroupId) return;
+            if (normalizeWhatsAppId(message.from) !== this.sourceGroupId) return;
 
-            const uniqueId = `${message.from}:${message.id.id}`;
+            const uniqueId = `${normalizeWhatsAppId(message.from)}:${messageId}`;
             if (this.seenMessages.has(uniqueId)) {
                 this.logger.debug('Duplicate message skipped', { uniqueId });
                 return;
@@ -121,7 +127,7 @@ class MessageHandler {
             }
 
             this.logger.info('Message forwarded', {
-                id: message.id.id,
+                id: messageId,
                 hasMedia: !!message.hasMedia,
                 senderId,
             });
