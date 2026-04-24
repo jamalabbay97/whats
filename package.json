@@ -1,0 +1,27 @@
+{
+  "name": "whatsapp-group-forward-bot",
+  "version": "1.0.0",
+  "description": "Production-ready WhatsApp group message forwarder using whatsapp-web.js",
+  "main": "index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "NODE_ENV=development node index.js"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "forwarder",
+    "whatsapp-web.js"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.26.0"
+  }
+}
