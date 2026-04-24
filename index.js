@@ -52,6 +52,13 @@ async function setupBot(client) {
         dedupeTtlMs: config.dedupeTtlMs,
     });
 
+    // 'message' catches incoming messages from other users.
+    // 'message_create' catches outgoing messages sent by the bot account itself.
+    // Both are needed; the dedup map in MessageHandler prevents double-forwarding.
+    client.on('message', (msg) => {
+        void messageHandler.forwardMessage(msg);
+    });
+
     client.on('message_create', (msg) => {
         void messageHandler.forwardMessage(msg);
     });
