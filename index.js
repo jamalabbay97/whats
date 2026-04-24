@@ -1,4 +1,6 @@
 const qrcode = require('qrcode-terminal');
+const QRCode = require('qrcode');
+const path = require('path');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { config, validateConfig } = require('./config');
 const { createLogger } = require('./logger');
@@ -102,6 +104,14 @@ async function start() {
     client.on('qr', (qr) => {
         logger.info('QR generated. Scan with WhatsApp to authenticate.');
         qrcode.generate(qr, { small: true });
+        const qrImagePath = path.join(process.cwd(), 'qr.png');
+        QRCode.toFile(qrImagePath, qr, { scale: 8 }, (err) => {
+            if (err) {
+                logger.error('Failed to save QR image', { message: err.message });
+            } else {
+                logger.info(`QR image saved to: ${qrImagePath}  — open this file and scan it with WhatsApp.`);
+            }
+        });
     });
 
     client.on('ready', async () => {
