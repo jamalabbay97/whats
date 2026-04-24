@@ -44,8 +44,6 @@ async function setupBot(client) {
         logger,
         sourceGroupId: sourceChat.id._serialized,
         targetChat,
-        forwardKeywords: config.forwardKeywords,
-        allowedSenders: config.allowedSenders,
         maxRetryAttempts: config.maxRetryAttempts,
         retryDelayMs: config.retryDelayMs,
         rateLimitMs: config.rateLimitMs,

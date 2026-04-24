@@ -16,8 +16,6 @@ A production-ready Node.js bot that listens to a **SOURCE** WhatsApp group and i
 - Caption preservation for media messages
 - Ignores bot's own messages
 - Duplicate-forward prevention
-- Optional keyword filter (`FORWARD_KEYWORDS`)
-- Optional sender whitelist (`ALLOWED_SENDERS`)
 - Retry on send failures
 - Basic rate limiting to reduce ban risk
 - Graceful shutdown (`SIGINT`, `SIGTERM`)
@@ -29,7 +27,7 @@ A production-ready Node.js bot that listens to a **SOURCE** WhatsApp group and i
 - `index.js` - main entry point and WhatsApp lifecycle handlers
 - `config.js` - environment config parsing/validation
 - `logger.js` - simple leveled logger
-- `messageHandler.js` - forwarding logic, retries, dedupe, filtering
+- `messageHandler.js` - forwarding logic, retries, and dedupe
 
 ## Requirements
 
@@ -66,8 +64,6 @@ On first run, scan the QR code shown in terminal.
 
 - `SOURCE_GROUP_NAME` (required)
 - `TARGET_GROUP_NAME` (required)
-- `FORWARD_KEYWORDS` (optional, comma-separated)
-- `ALLOWED_SENDERS` (optional, comma-separated WhatsApp IDs like `1234567890@c.us`)
 - `MAX_RETRY_ATTEMPTS` (optional, default `3`)
 - `RETRY_DELAY_MS` (optional, default `1500`)
 - `RATE_LIMIT_MS` (optional, default `400`)
